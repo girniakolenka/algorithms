@@ -1,8 +1,12 @@
 class Sort {
     constructor() {
-        const arr = [2, 78, 4, 2, 5, 300, 5, 1];
+        const arr = [5, 2, 4, 3, 1];
+
+        this.inversionCount = 0;
+
 
         console.log(this.mergeSort(arr));
+        console.log(this.inversionCount);
     }
 
     mergeSort(arr) {
@@ -26,6 +30,9 @@ class Sort {
         let i = 0;
         let j = 0;
 
+       // this.countInversion(leftArr);
+      //  this.countInversion(rightArr);
+
         for (let k = 0; k< n+m; k++) {
             const leftValue = leftArr[i];
             const rightValue = rightArr[j];
@@ -38,9 +45,15 @@ class Sort {
             if (typeof leftValue === "undefined" || leftValue > rightValue) {
                 result[k] = rightValue;
                 j++;
+                this.inversionCount = this.inversionCount + n - i;
             }
         }
 
         return result;
+    }
+
+
+    countInversion (arr) {
+        this.inversionCount++;
     }
 }
