@@ -87,7 +87,6 @@ public class Main {
                 new Partition(midElement, midIndex),
                 new Partition(Integer.valueOf(lastElem), end)
         };
-        
         Arrays.sort(partitionArr);
 
         Integer partitionIndex = partitionArr[1].index;
