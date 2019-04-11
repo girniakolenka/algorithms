@@ -14,7 +14,7 @@ public class Main {
             List<String> allLines = Files.readAllLines(Paths.get(fileName), charset);
 
             for (String line : allLines) {
-                System.out.println(line);
+                System.out.println("\"".concat(line).concat("\","));
             }
 
             radixSort(allLines, 3);

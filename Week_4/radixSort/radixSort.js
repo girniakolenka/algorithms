@@ -1,22 +1,27 @@
 class Sort {
     constructor () {
         const arr = [
-            "hzt",
-            "sng",
-            "ena",
-            "sdt",
-            "qds",
-            "yif",
-            "slt",
-            "lpz",
-            "cqc",
-            "hpo"
+            "ama",
+            "abj",
+            "att",
+            "agu",
+            "anp",
+            "awx",
+            "acf",
+            "akm",
+            "axd",
+            "aax"
         ];
+
         this._amountOfCharacters = 26;
         this._alphabet = this.getAlphabet();
+        this._maxAmount = this.createEmptyCountArr(this._amountOfCharacters);
 
+        const result = this.radixSort(arr, 3);
+        const maxElem = this._alphabet[this.findMaxIndex(this._maxAmount)];
 
-        console.log(this.radixSort(arr, 3));
+        console.log(result);
+        console.log(`${result[0]}${maxElem}${result[result.length-1]}`);
     }
 
     radixSort(baseArr, radix) {
@@ -26,17 +31,21 @@ class Sort {
             const result = [];
 
             for(let j=0; j<arr.length; j++) {
-                result.push(arr[j][i]);
+                const elem = arr[j][i];
+
+                this.createMaxAmount(elem);
+                result.push(elem);
+
             }
 
-            arr = this.countingSort(baseArr, result, i);
+            arr = this.countingSort(arr, result, i);
         }
 
         return arr;
     }
 
     countingSort(arr, compareArr, radix) {
-        const amountArr = Array(this._amountOfCharacters).fill(0);
+        const amountArr = this.createEmptyCountArr(this._amountOfCharacters);
         const result = [];
 
         compareArr.forEach((item) => {
@@ -47,13 +56,14 @@ class Sort {
 
         const summarizedAmountArr = this.getSummarizedAmount(amountArr);
 
-        arr.forEach((item) => {
+        for(let i=arr.length-1; i>=0; i--){
+            const item = arr[i];
             const character = item[radix];
             const index = this.findCharInAlphabet(character);
 
             result[summarizedAmountArr[index] - 1] = item;
             summarizedAmountArr[index]--;
-        });
+        }
 
         return result;
     }
@@ -71,5 +81,27 @@ class Sort {
 
     getAlphabet() {
         return [...Array(this._amountOfCharacters).keys()].map(i => String.fromCharCode(i + 97));
+    }
+
+    createMaxAmount(elem){
+        this._maxAmount[this.findCharInAlphabet(elem)]++;
+    }
+
+    createEmptyCountArr(len){
+        return Array(len).fill(0);
+    }
+
+    findMaxIndex(arr) {
+        let maxIndex = 0;
+        let max = arr[maxIndex];
+
+        arr.forEach((item, index) => {
+            if (max < item) {
+                maxIndex = index;
+                max = item;
+            }
+        });
+
+        return maxIndex;
     }
 }
