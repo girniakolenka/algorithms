@@ -18,10 +18,12 @@ class Sort {
                 amountArr.slice(0, index + 1).reduce((sum, value) => sum + value)
         );
 
-        arr.forEach((item) => {
+        for(let i=arr.length-1; i>=0; i--) {
+            const item = arr[i];
+
             result[summarizedAmountArr[item] - 1] = item;
             summarizedAmountArr[item]--;
-        });
+        }
 
         return result;
     }
