@@ -13,8 +13,6 @@ class ReadFile {
             const allText = rawFile.responseText;
             const lines = allText.split("\n");
 
-            lines.shift();
-
             resolve(lines);
         }
         rawFile.send(null);

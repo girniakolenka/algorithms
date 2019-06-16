@@ -1,13 +1,26 @@
 class Sort {
-    constructor(arr) {
-        return this.heapMedian(arr);
+    constructor(arr, fileName) {
+        this.result = [];
+        let median = this.heapMedian(arr);
+
+        new ReadFile(`data_examples/ext_output_${fileName}`)
+           .then(file => {
+              // Just to test data
+              this.result.push("");
+              console.log(JSON.stringify(file) === JSON.stringify(this.result))
+           })
+           .catch(() => {
+              console.log("Something goes wrong");
+           });
+
+        return median;
     }
 
     heapMedian(arr) {
-        let maxHeap = [arr[0]];
+        let maxHeap = [];
         let minHeap = [];
 
-        for (let i = 1; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             const minEl = this.getRootElem(minHeap);
             const elem = Number(arr[i]);
 
@@ -19,10 +32,18 @@ class Sort {
 
             this.balanceHeaps(maxHeap, minHeap);
 
-            console.log(maxHeap, minHeap, this.getMedian(maxHeap, minHeap));
+            this.displayResults(minHeap, maxHeap);
         }
 
         return this.getMedian(maxHeap, minHeap);
+    }
+
+    // Just to test data
+    displayResults(minHeap, maxHeap) {
+        this.result.push(`Medians: ${this.getMedian(maxHeap, minHeap)}`);
+        this.result.push(`H_low: [${minHeap.join(', ')}]`);
+        this.result.push(`H_high: [${maxHeap.join(', ')}]`);
+        this.result.push("");
     }
 
     getRootElem(heap) {
@@ -36,7 +57,7 @@ class Sort {
     getMedian(maxHeap, minHeap) {
         const maxLen = maxHeap.length;
         const minLen = minHeap.length;
-        const diff = Math.abs(maxLen - minLen);
+        const diff = maxLen - minLen;
         let median;
 
         switch (diff) {
@@ -47,7 +68,7 @@ class Sort {
                 median = this.getRootElem(minHeap);
                 break;
             default:
-                median = [this.getRootElem(maxHeap), this.getRootElem(minHeap)];
+                median = `${this.getRootElem(minHeap)} ${this.getRootElem(maxHeap)}`;
         }
 
         return median;
@@ -56,7 +77,7 @@ class Sort {
     addElemToHeap(heap, elem, isMax){
         heap.push(elem);
 
-        for(let i=this.heapSize(heap) - 1; i>=0; i--) {
+        for(let i=this.heapSize(heap); i>=0; i--) {
             this.rootHeapify(heap, i, isMax);
         }
 
@@ -114,16 +135,23 @@ class Sort {
 
         switch (maxLen - minLen) {
             case 2:
-                this.addElemToHeap(minHeap, this.extractRootElem(maxHeap), true);
+                this.addElemToHeap(minHeap, this.extractRootElem(maxHeap, false), true);
                 break;
             case -2:
-                this.addElemToHeap(maxHeap, this.extractRootElem(minHeap), false);
+                this.addElemToHeap(maxHeap, this.extractRootElem(minHeap, true), false);
                 break;
             default:
         }
     }
 
-    extractRootElem(heap) {
-        return heap.shift();
+    extractRootElem(heap, isMax) {
+        const root = this.getRootElem(heap);
+
+        heap[0] = heap[heap.length - 1];
+        heap.pop();
+
+        this.rootHeapify(heap, 0, isMax);
+
+        return root;
     }
 }
