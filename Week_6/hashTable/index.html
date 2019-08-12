@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Algorithms week 6</title>
+        <script src="./hashTable.js"></script>
+        <script src="./readFile.js"></script>
+        <script src="./worker.js"></script>
+        <script>
+           new ReadFile("data_examples/input.txt")
+           .then(file => {
+              file.shift();
+
+              new Sort(file);
+           })
+           .catch(status => {
+              console.log("Something goes wrong");
+           });
+        </script>
+    </head>
+    <body>
+        <p>Algorithms week 6</p>
+        <p>Hash table</p>
+        <p>Result in console</p>
+    </body>
+</html>
