@@ -1,8 +1,25 @@
 class BinaryTree {
     constructor(arr) {
         const data = arr[0].split(" ");
+        const tree = this.createBinaryTree(data);
+        let leaves = [];
 
-        console.log(this.createBinaryTree(data));
+        console.log(tree);
+        this.printLeaves(tree,leaves);
+        console.log(leaves);
+    }
+
+    createBinaryTree(data) {
+       const binaryTree = this.createTreeFromPreOrder(data, {}, 0, null);
+       let inOrderArr = [];
+       let index = {
+           current: 0
+       };
+
+       this.createInOrderArr(binaryTree, inOrderArr);
+       this.setInOrder(new Sort(inOrderArr), binaryTree, index);
+
+       return binaryTree;
     }
 
     createTreeFromPreOrder(arr, tree, index, previousNode) {
@@ -44,20 +61,6 @@ class BinaryTree {
         }
     }
 
-    createBinaryTree(data) {
-       const binaryTree = this.createTreeFromPreOrder(data, {}, 0, null);
-       let inOrderArr = [];
-       let index = {
-           current: 0
-       };
-
-       this.createInOrderArr(binaryTree, inOrderArr);
-       this.setInOrder(new Sort(inOrderArr), binaryTree, index);
-
-       return binaryTree;
-
-    }
-
     setInOrder(arr, node, index) {
         if(index.current !== arr.length && node !== null && node.data !== 0) {
             this.setInOrder(arr, node.left, index);
@@ -66,6 +69,16 @@ class BinaryTree {
             index.current++;
 
             this.setInOrder(arr, node.right, index);
+        }
+    }
+
+    printLeaves (node, arr) {
+        if(node && node.data !== 0) {
+            this.printLeaves(node.left, arr);
+            if(node.left.data === 0 && node.right.data === 0) {
+                arr.push(node.data);
+            }
+            this.printLeaves(node.right, arr);
         }
     }
  }
