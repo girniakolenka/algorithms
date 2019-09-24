@@ -2,14 +2,17 @@
 <html>
     <head>
         <title>Algorithms week 7</title>
-        <script src="./BinaryTree.js"></script>
+        <script src="./SearchBinaryTree.js"></script>
         <script src="./ReadFile.js"></script>
         <script src="./Node.js"></script>
         <script src="./Sort.js"></script>
+        <script src="./PrintLeaves.js"></script>
+        <script src="./MonotonePaths.js"></script>
+        <script src="./Main.js"></script>
         <script>
-           new ReadFile("data_examples/input_1000a.txt")
+           new ReadFile("data_examples/input_10a.txt")
            .then(file => {
-              new BinaryTree(file);
+              new Main(file);
            })
            .catch(status => {
               console.log("Something goes wrong");

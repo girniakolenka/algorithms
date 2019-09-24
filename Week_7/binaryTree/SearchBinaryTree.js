@@ -1,12 +1,8 @@
-class BinaryTree {
-    constructor(arr) {
-        const data = arr[0].split(" ");
-        const tree = this.createBinaryTree(data);
-        let leaves = [];
+class SearchBinaryTree {
+    constructor(file) {
+        const data = file[0].split(" ");
 
-        console.log(tree);
-        this.printLeaves(tree,leaves);
-        console.log(leaves);
+        return this.createBinaryTree(data);
     }
 
     createBinaryTree(data) {
@@ -69,16 +65,6 @@ class BinaryTree {
             index.current++;
 
             this.setInOrder(arr, node.right, index);
-        }
-    }
-
-    printLeaves (node, arr) {
-        if(node && node.data !== 0) {
-            this.printLeaves(node.left, arr);
-            if(node.left.data === 0 && node.right.data === 0) {
-                arr.push(node.data);
-            }
-            this.printLeaves(node.right, arr);
         }
     }
  }
