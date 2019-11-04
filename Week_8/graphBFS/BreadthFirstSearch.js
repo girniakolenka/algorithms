@@ -16,13 +16,10 @@
  *      d: [b,a,e],
  *      e: [c, d]
  *   }
- *
- * Result of breadthFirstSearch:
- *    s,a,b,c,d,e
  */
 
 class BreadthFirstSearch {
-    static breadthFirstSearch(graph, start) {
+    static search(graph, start) {
         let investigatedArr = [start];
         let queue = [start];
 
@@ -40,6 +37,6 @@ class BreadthFirstSearch {
             queue.shift();
         }
 
-        return investigatedArr.join(",");
+        return investigatedArr;
     }
 }

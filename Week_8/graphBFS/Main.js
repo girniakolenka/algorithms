@@ -1,38 +1,58 @@
 /*
  * Example of graph:
  *
- *      a - c
- *    /  \   \
- *  s     \   e
- *    \    \ /
- *      b - d
+ *     b
+ *   /  \
+ *  a -  c
+ *
+ *  d - f
+ *
+ *    k
  *
  *  List of graph:
  *  g = {
- *      s: [a, b],
- *      a: [s, c, d],
- *      b: [s, d],
- *      c: [a, e],
- *      d: [b,a,e],
- *      e: [c, d]
+ *      a: [b, c],
+ *      b: [a, c],
+ *      c: [a, b],
+ *      d: [f],
+ *      f: [d],
+ *      k: []
  *   }
+ *
+ * Result of search:
+ *    [[a,b,c], [d, f], [k]]
  */
-
 
 
 class Main {
     constructor () {
         const graph = {
-            "s": ["a", "b"],
-            "a": ["s", "c", "d"],
-            "b": ["s", "d"],
-            "c": ["a", "e"],
-            "d": ["b", "a", "e"],
-            "e": ["c", "d"]
+            "a": ["b", "c"],
+            "b": ["a", "c"],
+            "c": ["a", "b"],
+            "d": ["f"],
+            "f": ["d"],
+            "k": []
         }
 
-        console.log(BreadthFirstSearch.breadthFirstSearch(graph, "s"));
+        console.log(this.countConnectedness(graph));
     }
 
 
+    countConnectedness (graph) {
+        let connectednessArr = [];
+        const vertexes = Object.keys(graph);
+
+        vertexes.forEach(item => {
+            if (!this.isConnected(connectednessArr, item)) {
+                connectednessArr.push(BreadthFirstSearch.search(graph, item));
+            }
+        });
+
+        return JSON.stringify(connectednessArr);
+    }
+
+    isConnected(connectednessArr, vertex) {
+        return connectednessArr.flat().includes(vertex);
+    }
 }
