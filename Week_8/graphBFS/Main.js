@@ -31,27 +31,8 @@ class Main {
             "e": ["c", "d"]
         }
 
-        console.log(this.breadthFirstSearch(graph, "s"));
+        console.log(BreadthFirstSearch.breadthFirstSearch(graph, "s"));
     }
 
-    breadthFirstSearch(graph, start) {
-        let investigatedArr = [start];
-        let queue = [start];
 
-        while(queue.length !== 0) {
-            const [vertex] = queue;
-
-            graph[vertex].forEach(item => {
-                if(investigatedArr.indexOf(item) === -1) {
-                   investigatedArr.push(item);
-                   queue.push(item);
-                }
-            });
-
-
-            queue.shift();
-        }
-
-        return investigatedArr.join(",");
-    }
 }
