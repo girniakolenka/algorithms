@@ -19,7 +19,7 @@
  *      k: []
  *   }
  *
- * Result of search:
+ * Result of count:
  *    [[a,b,c], [d, f], [k]]
  */
 

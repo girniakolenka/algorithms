@@ -16,6 +16,9 @@
  *      d: [b,a,e],
  *      e: [c, d]
  *   }
+
+ * Result of search:
+ *    [s, a, b, c, d, e]
  */
 
 class BreadthFirstSearch {
