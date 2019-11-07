@@ -23,15 +23,17 @@
 
 class BreadthFirstSearch {
     static search(graph, start) {
-        let investigatedArr = [start];
+        let investigated = {
+            [start] : start
+        };
         let queue = [start];
 
         while(queue.length !== 0) {
             const [vertex] = queue;
 
             graph[vertex].forEach(item => {
-                if(investigatedArr.indexOf(item) === -1) {
-                   investigatedArr.push(item);
+                if(!investigated[item]) {
+                   investigated[item] = item;
                    queue.push(item);
                 }
             });
@@ -40,6 +42,6 @@ class BreadthFirstSearch {
             queue.shift();
         }
 
-        return investigatedArr;
+        return Object.keys(investigated);
     }
 }
