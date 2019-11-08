@@ -23,20 +23,24 @@
 
 class DepthFirstSearch {
     static search(graph, start) {
-        let investigated = {};
+        let investigated = {
+            [start]: start
+        };
+        let stack = [start];
 
-        return this.getNext(graph, start, investigated);
-    }
+        while(stack.length !== 0) {
+            const [vertex] = stack;
+            const nextVertex = graph[vertex].find(
+                item => !investigated[item] && !stack.includes(item)
+            );
 
-    static getNext(graph, vertex, investigated) {
-        investigated[vertex] = vertex;
-
-        graph[vertex].forEach(item => {
-            if(!investigated[item]) {
-               this.getNext(graph, item, investigated);
+            if(nextVertex) {
+                investigated[nextVertex] = nextVertex;
+                stack.unshift(nextVertex);
             }
-        });
 
+            stack.splice(stack.indexOf(vertex), 1);
+        }
 
         return Object.keys(investigated);
     }
