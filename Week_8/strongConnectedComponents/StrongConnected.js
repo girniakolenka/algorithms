@@ -3,7 +3,7 @@ class StrongConnected {
         this._index = 0;
         this._time = {};
 
-        console.log(this.find(file));
+        console.log(this.find(file).splice(0, 10));
     }
 
     find(file) {
@@ -12,14 +12,19 @@ class StrongConnected {
         const investigated = {};
         const investigatedTransported = {};
 
+        console.log("Start find");
+
         Object.keys(graph).forEach(vertex => {
             if(!investigated[vertex]) {
                 this.search(graph, vertex, investigated, {});
             }
         });
+        console.log("Create time array");
 
         const vertexes = this.reorderVertexesByTime(this._time);
         const strongConnected = [];
+
+        console.log("Find strong components");
 
         vertexes.forEach(vertex => {
             if(!investigatedTransported[vertex]) {
@@ -63,7 +68,7 @@ class StrongConnected {
     }
 
     search(graph, vertex, investigated, currentCircle) {
-        const vertexes = graph[vertex] ? graph[vertex] : [];
+/*        const vertexes = graph[vertex] ? graph[vertex] : [];
 
         investigated[vertex] = vertex;
         currentCircle[vertex] = vertex;
@@ -76,6 +81,33 @@ class StrongConnected {
 
         this._time[vertex] = this._index;
         this._index++;
+
+        return Object.keys(currentCircle);*/
+
+
+        const vertexes = graph[vertex] ? graph[vertex] : [];
+        let stack = [vertex];
+
+        investigated[vertex] = vertex;
+        currentCircle[vertex] = vertex;
+
+
+        while(stack.length !== 0) {
+            const [node] = stack;
+            const nextVertex = graph[node] ? graph[node].find(
+                item => !investigated[item]
+            ) : null;
+
+            if(nextVertex) {
+                investigated[nextVertex] = nextVertex;
+                currentCircle[nextVertex] = nextVertex;
+                stack.unshift(nextVertex);
+            } else {
+                this._time[node] = this._index;
+                this._index++;
+                stack.splice(stack.indexOf(node), 1);
+            }
+        }
 
         return Object.keys(currentCircle);
     }
@@ -92,3 +124,4 @@ class StrongConnected {
         return sortable.map((item) => item[1]);
     }
 }
+module.exports = StrongConnected;
