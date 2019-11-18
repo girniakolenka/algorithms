@@ -1,38 +1,46 @@
 class StrongConnected {
     constructor (file) {
         this._index = 0;
-        this._time = {};
+        this._indexes = {};
 
-        console.log(this.find(file).splice(0, 10));
+        return this.find(file);
     }
 
     find(file) {
         const graph = this.createGraph(file);
+
+        this.createIndexes(graph);
+
+        const vertexes = this.reorderVertexesByIndex();
+
+        return this.getStrongConnectedComponents(file, vertexes);
+    }
+
+    getStrongConnectedComponents(file, vertexes) {
         const graphTransported = this.createTransposedGraph(file);
-        const investigated = {};
         const investigatedTransported = {};
-
-        console.log("Start find");
-
-        Object.keys(graph).forEach(vertex => {
-            if(!investigated[vertex]) {
-                this.search(graph, vertex, investigated, {});
-            }
-        });
-        console.log("Create time array");
-
-        const vertexes = this.reorderVertexesByTime(this._time);
-        const strongConnected = [];
-
-        console.log("Find strong components");
+        const strongConnectedAmount = [];
 
         vertexes.forEach(vertex => {
             if(!investigatedTransported[vertex]) {
-                strongConnected.push(this.search(graphTransported, vertex, investigatedTransported, {}).length);
+                const components = this.searchAndEnumerateIndex(graphTransported, vertex, investigatedTransported);
+                const componentsAmount = components.length;
+
+                strongConnectedAmount.push(componentsAmount);
             }
         });
 
-        return strongConnected.sort((a, b) => b-a);
+        return strongConnectedAmount.sort((a, b) => b-a);
+    }
+
+    createIndexes(graph) {
+        const investigated = {};
+
+        Object.keys(graph).forEach(vertex => {
+            if(!investigated[vertex]) {
+                this.searchAndEnumerateIndex(graph, vertex, investigated);
+            }
+        });
     }
 
     createGraph(file) {
@@ -67,30 +75,14 @@ class StrongConnected {
         }
     }
 
-    search(graph, vertex, investigated, currentCircle) {
-/*        const vertexes = graph[vertex] ? graph[vertex] : [];
-
-        investigated[vertex] = vertex;
-        currentCircle[vertex] = vertex;
-
-        vertexes.forEach(item => {
-            if(!investigated[item]) {
-               this.search(graph, item, investigated, currentCircle);
-            }
-        });
-
-        this._time[vertex] = this._index;
-        this._index++;
-
-        return Object.keys(currentCircle);*/
-
-
+    searchAndEnumerateIndex(graph, vertex, investigated) {
         const vertexes = graph[vertex] ? graph[vertex] : [];
+        const currentCircle = {
+            [vertex] : vertex
+        };
         let stack = [vertex];
 
         investigated[vertex] = vertex;
-        currentCircle[vertex] = vertex;
-
 
         while(stack.length !== 0) {
             const [node] = stack;
@@ -103,7 +95,7 @@ class StrongConnected {
                 currentCircle[nextVertex] = nextVertex;
                 stack.unshift(nextVertex);
             } else {
-                this._time[node] = this._index;
+                this._indexes[node] = this._index;
                 this._index++;
                 stack.splice(stack.indexOf(node), 1);
             }
@@ -112,16 +104,24 @@ class StrongConnected {
         return Object.keys(currentCircle);
     }
 
-    reorderVertexesByTime(vertexes) {
+    /*
+     * Object this._indexes
+     * {
+     *     [vertex] : [index]
+     * }
+     * Reorder by indexes from bigger to smaller
+     */
+    reorderVertexesByIndex() {
         const sortable = [];
 
-        for (let i in vertexes) {
-            sortable.push([vertexes[i], i])
+        for (let i in this._indexes) {
+            sortable.push([this._indexes[i], i]);
         }
 
         sortable.sort((a, b) => b[0]-a[0]);
 
-        return sortable.map((item) => item[1]);
+        return sortable.map(item => item[1]);
     }
 }
+
 module.exports = StrongConnected;
