@@ -1,16 +1,26 @@
+const Path = require("./Path.js");
+
 class Dijkstra {
-    constructor(file) {
-        this._graph = new Graph(file);
+    constructor(graph, start, end) {
+        this._graph = graph;
         this._paths = this.getInitValues(null);
         this._lengths = this.getInitValues(Infinity);
 
         this._investigated = {};
 
-        this._lengths[1] = 0;
-        this.find(1);
+        this.init(start, end);
 
-        console.log(this._lengths);
-        console.log(this.buildPath());
+        return this._lengths;
+    }
+
+    init (start, end) {
+        this._lengths[start] = 0;
+        this.find(start, end);
+
+//TODO
+        this._lengths.shift();
+
+     //   console.log(new Path(this._paths));
     }
 
     getInitValues(value) {
@@ -19,34 +29,45 @@ class Dijkstra {
         return Array(size).fill(value);
     }
 
-    find(start) {
-        this._graph.getEdgesForVertex(start).forEach(item => {
-            const [vertexTo, weight] = item;
+    find(start, end) {
+        let stack = [start];
 
-            if(!this._investigated[vertexTo]) {
-                const currentLength = this._lengths[vertexTo];
-                const length = this._lengths[start] + weight;
+        while(stack.length !== 0 ){
+            const [vertex] = stack;
+            const edges = this._graph.getEdgesForVertex(vertex) || [];
 
-                if(length < currentLength) {
-                    this._lengths[vertexTo] = length;
-                    this._paths[vertexTo] = start;
-                }
+            edges.forEach(item => {
+                this.definePathAndLength(vertex, item);
+            });
+
+            this._investigated[vertex] = true;
+
+            stack.splice(stack.indexOf(vertex), 1);
+
+            const newVertex = this.findLowestLength();
+
+            if(newVertex && newVertex !== end) {
+                stack.push(newVertex);
             }
-        });
+        }
+    }
 
-        this._investigated[start] = true;
+    definePathAndLength (start, item) {
+        const [vertexTo, weight] = item;
 
-        const newVertex = this.findLowestLength();
+        if(!this._investigated[vertexTo]) {
+            const currentLength = this._lengths[vertexTo];
+            const length = this._lengths[start] + weight;
 
-
-        if(newVertex) {
-            this.find(newVertex);
-        } else {
-            return;
+            if(length < currentLength) {
+                this._lengths[vertexTo] = length;
+                this._paths[vertexTo] = start;
+            }
         }
     }
 
     findLowestLength() {
+    debugger;
         let lowest = Infinity;
         let lowestIndex;
 
@@ -59,26 +80,6 @@ class Dijkstra {
 
         return lowestIndex;
     }
-
-    buildPath() {
-        let result = {};
-
-        this._paths.forEach((path, index) => {
-            this.addPath(result, index, this._paths[index]);
-        });
-
-        return result;
-    }
-
-    addPath(result, index, path) {
-        if(path !== null) {
-            if(result[index]) {
-                result[index].push(path);
-            } else {
-                 result[index] = [path];
-            }
-            this.addPath(result, index, this._paths[path]);
-
-        }
-    }
 }
+
+module.exports = Dijkstra;

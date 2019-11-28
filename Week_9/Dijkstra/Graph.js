@@ -1,12 +1,14 @@
 class Graph {
     constructor(file) {
+        this.size = null;
         this.graph = this.createGraph(file);
     }
 
     createGraph(file) {
         const graph = {};
 
-        file.shift(); // remove first line from file, technical one with amount of vertexes and edges
+        this.defineSize(file);
+
         file.forEach(row => {
             const [vertexFromStr, vertexToStr, weightStr] = row.split(" ");
             const vertexFrom = Number(vertexFromStr);
@@ -23,15 +25,21 @@ class Graph {
         return graph;
     }
 
+    // remove first line from file, technical one with amount of vertexes and edges
+    defineSize(file) {
+        const dimensions = file.shift().split(" ");
+        const [size] = dimensions;
+
+        this.size = Number(size);
+    }
+
     getSize() {
-        return this.getVertexes().length;
+        return this.size;
     }
 
     getEdgesForVertex(vertex) {
         return this.graph[vertex];
     }
-
-    getVertexes() {
-        return Object.keys(this.graph);
-    }
 }
+
+module.exports = Graph;
