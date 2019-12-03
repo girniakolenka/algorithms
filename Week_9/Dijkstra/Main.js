@@ -23,6 +23,8 @@ class Main {
         const graph = new Graph(input);
         const size = graph.getSize();
 
+        const timeNow = Date.now();
+
         console.log([...Array(size).keys()].every(index => {
             const start = index + 1;
             const dijkstra = new Dijkstra(graph, start);
@@ -33,6 +35,8 @@ class Main {
             console.log(output[start - 1])*/
             return result;
        }));
+
+       console.log(Date.now() - timeNow);
     }
 }
 
