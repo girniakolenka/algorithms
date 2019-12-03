@@ -31,7 +31,7 @@ class Dijkstra {
         return Array(size).fill(value);
     }
 
-    find(start, end) {
+    find(start) {
         const size = this._graph.getSize();
         const heap = new Heap(size, start, this._lengths);
 

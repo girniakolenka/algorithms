@@ -24,14 +24,15 @@ class Main {
         const size = graph.getSize();
 
         console.log([...Array(size).keys()].every(index => {
-            const dijkstra = new Dijkstra(graph, index+1);
+            const start = index + 1;
+            const dijkstra = new Dijkstra(graph, start);
             const shortPath = dijkstra.getLengths().join(" ").replace(/\Infinity/g, "--");
-            const result = output[index] === shortPath;
+            const result = output[start - 1] === shortPath;
 
+/*            console.log(shortPath)
+            console.log(output[start - 1])*/
             return result;
        }));
-
-      //  console.log(new Dijkstra(graph, 100562, 1070345)[1070345])
     }
 }
 
