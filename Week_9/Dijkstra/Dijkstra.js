@@ -1,5 +1,4 @@
 const Path = require("./Path.js");
-const Heap = require("./Heap.js");
 
 class Dijkstra {
     constructor(graph, start, end) {
@@ -7,11 +6,10 @@ class Dijkstra {
         this._paths = this.getInitValues(null);
         this._lengths = this.getInitValues(Infinity);
 
+        this._investigated = {};
 
         this.init(start, end);
-    }
 
-    getLengths() {
         return this._lengths;
     }
 
@@ -31,32 +29,58 @@ class Dijkstra {
         return Array(size).fill(value);
     }
 
-    find(start) {
-        const size = this._graph.getSize();
-        const heap = new Heap(size, start, this._lengths);
+    find(start, end) {
+        let stack = [start];
 
-        while(heap.getSize() !== 0 ){
-            const vertex = heap.extractMin();
+        while(stack.length !== 0 ){
+            const [vertex] = stack;
             const edges = this._graph.getEdgesForVertex(vertex) || [];
 
             edges.forEach(item => {
-                const [vertexTo, weight] = item;
-
-                this.definePathAndLength(vertex, vertexTo, weight, heap);
+                this.definePathAndLength(vertex, item);
             });
+
+            this._investigated[vertex] = true;
+
+            stack.splice(stack.indexOf(vertex), 1);
+
+            const newVertex = this.findLowestLength();
+
+
+            if(newVertex && newVertex !== end) {
+                stack.push(newVertex);
+            }
         }
     }
 
-    definePathAndLength (start, vertexTo, weight, heap) {
-        const currentLength = this._lengths[vertexTo];
-        const length = this._lengths[start] + weight;
+    definePathAndLength (start, item) {
+        const [vertexTo, weight] = item;
 
-        if(length < currentLength) {
-            this._lengths[vertexTo] = length;
-            this._paths[vertexTo] = start;
+        if(!this._investigated[vertexTo]) {
+        console.log("new path added" + vertexTo);
 
-            heap.updateElement(vertexTo);
+            const currentLength = this._lengths[vertexTo];
+            const length = this._lengths[start] + weight;
+
+            if(length < currentLength) {
+                this._lengths[vertexTo] = length;
+                this._paths[vertexTo] = start;
+            }
         }
+    }
+
+    findLowestLength() {
+        let lowest = Infinity;
+        let lowestIndex;
+
+        this._lengths.forEach((length, index) => {
+            if(length < lowest && !this._investigated[index]) {
+                lowest = length;
+                lowestIndex = index;
+            }
+        });
+
+        return lowestIndex;
     }
 }
 
