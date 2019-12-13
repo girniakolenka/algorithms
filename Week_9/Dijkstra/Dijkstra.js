@@ -46,6 +46,7 @@ class Dijkstra {
 
             const newVertex = this.findLowestLength();
 
+
             if(newVertex && newVertex !== end) {
                 stack.push(newVertex);
             }
@@ -56,6 +57,8 @@ class Dijkstra {
         const [vertexTo, weight] = item;
 
         if(!this._investigated[vertexTo]) {
+        console.log("new path added" + vertexTo);
+
             const currentLength = this._lengths[vertexTo];
             const length = this._lengths[start] + weight;
 
@@ -67,7 +70,6 @@ class Dijkstra {
     }
 
     findLowestLength() {
-    debugger;
         let lowest = Infinity;
         let lowestIndex;
 
