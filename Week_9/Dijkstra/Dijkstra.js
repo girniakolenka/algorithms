@@ -57,7 +57,7 @@ class Dijkstra {
         const [vertexTo, weight] = item;
 
         if(!this._investigated[vertexTo]) {
-        console.log("new path added" + vertexTo);
+            console.log("new path added " + vertexTo);
 
             const currentLength = this._lengths[vertexTo];
             const length = this._lengths[start] + weight;

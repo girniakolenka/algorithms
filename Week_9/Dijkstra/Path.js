@@ -28,4 +28,4 @@ class Path {
     }
 }
 
-//module.exports = Path;
+module.exports = Path;
